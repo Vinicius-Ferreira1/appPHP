@@ -26,17 +26,17 @@ class Response{
         $this->headers[$key] = $value;
     }
 
-    public function sendResponse(){
-        $this->sendHeaders();
-        $this->sendContent();
-    }
-
     private function sendHeaders(){
         http_response_code($this->httpCode);
 
         foreach($this->headers as $key => $value){
             header($key.': '.$value);
         }
+    }
+
+    public function sendResponse(){
+        $this->sendHeaders();
+        $this->sendContent();
     }
 
     private function sendContent(){
