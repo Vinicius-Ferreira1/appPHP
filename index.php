@@ -2,8 +2,18 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use App\Controller\Pages\Home;
+use App\Http\Router;
+use App\Utils\View;
 
-$request = new App\Http\Request();
+define('URL', 'http://localhost/appPHP');
 
-echo Home::getHome();
+View::init([
+    'URL' => URL
+]);
+
+$obRouter = new Router(URL);
+
+include __DIR__ . '/routes/pages.php';
+
+#imprime o response da rota
+$obRouter->run()->sendResponse();
