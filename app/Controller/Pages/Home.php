@@ -16,8 +16,6 @@ class Home extends Page{
         
         $content = View::render('pages/Home', [
             'name' => $desenvolvedor->nome,
-            'stack' => $desenvolvedor->stack,
-            'description' => $desenvolvedor->descricao,
         ]);
 
         return parent::getPage('Home', $content);
