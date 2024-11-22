@@ -1,5 +1,5 @@
 # appPHP
-apenas estudante rotas e MVC em php puro
+apenas estudando rotas e MVC em php puro
 
 
 estou usando esse tutorial de base:
