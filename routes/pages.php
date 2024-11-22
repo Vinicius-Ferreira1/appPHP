@@ -18,10 +18,17 @@ $obRouter->get('/sobre', [
     }
 ]);
 
-#DINAMICA
-$obRouter->get('/pagina/{idPagina}', [
-    function($idPagina){
-        return new Response(200, 'página ' . $idPagina); ;
+#DEPOIMENTOS
+$obRouter->get('/depoimentos', [
+    function($request){
+        return new Response(200, Pages\Testimony::getTestimonies($request));
     }
 ]);
 
+
+#DEPOIMENTOS (insert)
+$obRouter->post('/depoimentos', [
+    function($request){
+        return new Response(200, Pages\Testimony::insertTestimony($request));
+    }
+]);
