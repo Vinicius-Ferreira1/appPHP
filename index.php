@@ -8,5 +8,7 @@ $obRouter = new Router(URL);
 
 include __DIR__ . '/routes/pages.php';
 
+include __DIR__ . '/routes/admin.php';
+
 #imprime o response da rota
 $obRouter->run()->sendResponse();
