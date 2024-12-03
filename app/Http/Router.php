@@ -5,6 +5,7 @@ namespace App\Http;
 use \Closure;
 use \Exception;
 use \ReflectionFunction;
+use \App\Http\Middleware\Queue as MiddlewareQueue ;
 
 class Router{
 
@@ -28,11 +29,13 @@ class Router{
     private function addRoute($method, $route, $params = []){
         foreach($params as $key => $value){
             if($value instanceof Closure){
-                $params['controller'] = $value;
+                $params['controller'] =  $value;
                 unset($params[$key]);
                 continue;
             }
         }
+
+        $params['middlewares'] = $params['middlewares'] ?? []; 
 
         $params['variables'] = [];
 
@@ -66,8 +69,8 @@ class Router{
     private function getUri(){
         $uri = $this->request->getUri();
 
-        $xUri = strlen($this->prefix) ? explode($this->prefix,$uri) : [$uri];
-
+        $xUri = strlen($this->prefix) ? explode($this->prefix,  $uri) : [$uri];
+        
         return end($xUri);
     }
 
@@ -77,9 +80,7 @@ class Router{
         $httpMethod = $this->request->getHttpMethod();
 
         foreach($this->routes as $patternRoute => $methods){
-
             if(preg_match($patternRoute, $uri, $matches)){
-
                 if(isset($methods[$httpMethod])){
                     unset($matches[0]);
 
@@ -113,8 +114,9 @@ class Router{
                 $args[$name] = $route['variables'][$name] ?? '';
             }
 
-            return call_user_func_array($route['controller'], $args);
+            return (new MiddlewareQueue($route['middlewares'], $route['controller'], $args))->next($this->request);
 
+            return call_user_func_array($route['controller'], $args);
         }catch(Exception $e){
             return new Response($e->getCode(), $e->getMessage());
         }
@@ -122,6 +124,14 @@ class Router{
 
     public function getCurrentUrl(){
         return $this->url.$this->getUri();
+    }
+
+    public function redirect($route){
+        $url = $this->url.$route;
+
+        header("Location: ".$url);
+        
+        exit;
     }
 
 }
