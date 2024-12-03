@@ -5,18 +5,23 @@ namespace App\Http\Middleware;
 class Queue{
 
     private static $map = [];
+    private static $default = [];
     private $middlewares = [];
     private $controller;
     private $controllerArgs = [];
      
     public function __construct($middlewares, $controller, $controllerArgs){
-        $this->middlewares    = $middlewares;
+        $this->middlewares    = array_merge(self::$default, $middlewares);
         $this->controller     = $controller;
         $this->controllerArgs = $controllerArgs;
     }
 
     public static function setMap($map){
         self::$map = $map;
+    }
+
+    public static function setDefault($default){
+        self::$default = $default;
     }
 
     public function next($request){

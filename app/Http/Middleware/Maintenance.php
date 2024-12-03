@@ -2,11 +2,14 @@
 
 namespace App\Http\Middleware;
 
-class Maintenence{
+
+class Maintenance{
 
     public function handle($request, $next){
 
-        die("aaaa");
+        if(getenv('MAINTENANCE') == 'true'){
+            throw new \Exception('Pagina em manutencao. Tente novamente mais tarde.', 503);
+        }
 
         return $next($request);
     }
